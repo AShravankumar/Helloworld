@@ -9,20 +9,19 @@ import DateRangePicker from 'react-bootstrap-daterangepicker'
 import 'bootstrap-daterangepicker/daterangepicker.css';
 import Inputmask from 'inputmask'
 
-Amplify.configure(
+API.configure(
   {
-    API: {
       endpoints: [
         {
           name: "GetFDAModelsFromAurora-API",
-          endpoint: "https://4fu5359q77.execute-api.us-east-1.amazonaws.com/Sandbox"                   
+          endpoint: "https://4fu5359q77.execute-api.us-east-1.amazonaws.com/Sandbox",
+          region:"us-east-1"                 
         },
         {
           name: "cascadeapi",
           endpoint: "https://lb2vumck3k.execute-api.ap-south-1.amazonaws.com/dev"
         }
       ]
-    }
   });
 
 
@@ -214,41 +213,8 @@ export class Home extends Component {
       response: true,
     };
 
-    // API
-    //   .get(apiName, path, myInit)
-    //   .then(response => {
-    //     console.log(response);
-    //     var fdadata = Object.values(JSON.parse(response.data.FDAData));
-    //     var tempObj = [];
-    //     fdadata.forEach((x, i) => {
-    //       x["DateCleared"] = x["Date Cleared"].split('-')[1] + "/" + x["Date Cleared"].split('-')[2] + "/" + x["Date Cleared"].split('-')[0]
-    //       tempObj.push(x);
-    //     })
-    //     this.FDAList = tempObj;
-    //     this.Filters.BodyArea = this.resolveDropdown(this.FDAList, "BodyArea");
-    //     this.Filters.ClinicallyValidated = this.resolveDropdown("", "ClinicallyValidated");
-    //     this.Filters.Manufacturer = this.resolveDropdown(this.FDAList, "Manufacturer");
-    //     this.Filters.Modality = this.resolveDropdown(this.FDAList, "Modality");
-    //     this.Filters.ProductCode = JSON.parse(response.data.ProductCode);
-    //     this.setState({
-    //       FDAList: this.FDAList,
-    //       loading: false,
-    //       Filters: this.Filters,
-    //       modalities: this.Filters.Modality,
-    //       bodyArea: this.Filters.BodyArea,
-    //       manufacturer: this.Filters.Manufacturer,
-    //       productCode: this.Filters.ProductCode,
-    //       clinicallyValidated: this.Filters.ClinicallyValidated,
-    //       FilteredList: this.FDAList
-    //     }, () => { console.log('component-did-mount', this.state.FDAList) });
-    //     this.applyMasking()
-
-    //   })
-    //   .catch(error => {
-    //     console.log(error);
-    //   });
-
-      axios.get(Apiroot+path)
+    API
+      .get(apiName, path, myInit)
       .then(response => {
         console.log(response);
         var fdadata = Object.values(JSON.parse(response.data.FDAData));
@@ -262,7 +228,7 @@ export class Home extends Component {
         this.Filters.ClinicallyValidated = this.resolveDropdown("", "ClinicallyValidated");
         this.Filters.Manufacturer = this.resolveDropdown(this.FDAList, "Manufacturer");
         this.Filters.Modality = this.resolveDropdown(this.FDAList, "Modality");
-        // this.Filters.ProductCode = JSON.parse(response.data.ProductCode);
+        this.Filters.ProductCode = JSON.parse(response.data.ProductCode);
         this.setState({
           FDAList: this.FDAList,
           loading: false,
@@ -275,7 +241,40 @@ export class Home extends Component {
           FilteredList: this.FDAList
         }, () => { console.log('component-did-mount', this.state.FDAList) });
         this.applyMasking()
+
       })
+      .catch(error => {
+        console.log(error);
+      });
+
+      // axios.get(Apiroot+path)
+      // .then(response => {
+      //   console.log(response);
+      //   var fdadata = Object.values(JSON.parse(response.data.FDAData));
+      //   var tempObj = [];
+      //   fdadata.forEach((x, i) => {
+      //     x["DateCleared"] = x["Date Cleared"].split('-')[1] + "/" + x["Date Cleared"].split('-')[2] + "/" + x["Date Cleared"].split('-')[0]
+      //     tempObj.push(x);
+      //   })
+      //   this.FDAList = tempObj;
+      //   this.Filters.BodyArea = this.resolveDropdown(this.FDAList, "BodyArea");
+      //   this.Filters.ClinicallyValidated = this.resolveDropdown("", "ClinicallyValidated");
+      //   this.Filters.Manufacturer = this.resolveDropdown(this.FDAList, "Manufacturer");
+      //   this.Filters.Modality = this.resolveDropdown(this.FDAList, "Modality");
+      //   // this.Filters.ProductCode = JSON.parse(response.data.ProductCode);
+      //   this.setState({
+      //     FDAList: this.FDAList,
+      //     loading: false,
+      //     Filters: this.Filters,
+      //     modalities: this.Filters.Modality,
+      //     bodyArea: this.Filters.BodyArea,
+      //     manufacturer: this.Filters.Manufacturer,
+      //     productCode: this.Filters.ProductCode,
+      //     clinicallyValidated: this.Filters.ClinicallyValidated,
+      //     FilteredList: this.FDAList
+      //   }, () => { console.log('component-did-mount', this.state.FDAList) });
+      //   this.applyMasking()
+      // })
   }
   applyMasking = () => {
     var selector = document.getElementById("datecleared");
